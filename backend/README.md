@@ -1,0 +1,1 @@
+run 'npm start' to start the server on the 8383 port
