@@ -3,11 +3,34 @@ var app = express();
 var http = require("http").Server(app);
 var io = require("./game").listen(http);
 
+let password = "pass"
+let username = "user"
+
 app.set("port", 8383);
-app.use(express.static("public"));
+app.use(express.json());
 
 app.get("/", function(req, res) {
     console.log("hello");
+});
+
+app.post("/login", function(req, res){
+	var req_user = req.body.username;
+	var req_pass = req.body.password;
+
+	console.log("Attempting auth"); 
+	console.log("username: " + req_user + " password: " + req_pass);
+
+	if (
+		(req_user != username) || 
+		(req_pass != password)
+	){
+		res.status(401).send();
+		console.log('Not authorized');
+	}else{
+		res.status(200).send();
+		console.log('Authorized');
+	}
+
 });
 
 http.listen(app.get("port"), function(){
