@@ -3,8 +3,8 @@ var app = express();
 var http = require("http").Server(app);
 var io = require("./game").listen(http);
 
-let password = "pass"
-let username = "user"
+let password = ""
+let username = ""
 
 app.set("port", 8383);
 app.use(express.json());

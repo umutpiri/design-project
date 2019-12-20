@@ -13,9 +13,14 @@ import { createStackNavigator } from 'react-navigation-stack';
 import io from 'socket.io-client';
 
 let serverEndpoints = {
+  login: 'http://192.168.1.31:8383/login',
+  game: 'http://192.168.1.31:8383',
+};
+//Buna bir çözüm bulmaya çalışıcam, şimdilik yorum satırı kullanalım. TODO
+/*let serverEndpoints = {
   login: 'http://192.168.0.77:8383/login',
   game: 'http://192.168.0.77:8383',
-};
+};*/
 
 class Game extends React.Component {
   constructor(props){
@@ -24,7 +29,7 @@ class Game extends React.Component {
   }
 
   componentDidMount(){
-    this.socket.on("connection",() => {
+    this.socket.on("connect",() => {
       console.log("Connected");
      });
     this.socket.on("disconnect",() => {
@@ -33,12 +38,21 @@ class Game extends React.Component {
      this.socket.on("event", (event)=>{
        console.log(event);
      });
-
+     this.socket.on("joined queue", () => {
+       console.log("joined queue")
+     })
   }
+
+  enterQueue() {
+    this.socket.emit("enter queue");
+    console.log("queue entered")
+  }
+
   render() {
     return (
       <View>
         <Text>Game main page</Text>
+        <Button title="Enter Queue" onPress={() => this.enterQueue()} />
       </View>
     );
   }
