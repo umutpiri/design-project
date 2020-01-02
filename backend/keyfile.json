@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "cosmic-stacker-224106",
+  "private_key_id": "79a243c8faed7fda566385b022078a2bf92574c3",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC+TW6e+819inIK\nAQju5MJWUTbGtQNAeCRc8KVRqomLf75/jNsIglWb6y7SKuCvv7XaWGtzsb5Hh+66\nm5g/+d0j2yBKCDcFolekqYr6xpqYqatebPP1uT32QUtf5IpiU2ZJlEAqN+V2Mgbs\n2ZNthM01tSdT82VCu20kc/gjWR7ae6JGtBfWKdHvUZgPCnLlC6rGb+VFAMsjGHvP\nqpozWLzo1Vkw2Lu8rHViCXaA+xQqgnJzyGSNl+rB21I/0lhZHiB3Dyl/XQhkqaeh\nsuebPjGTV7doCCjsVVOAq521Xn8SqK5hwRgqJ/lliAm6sxgYBTwRnfB6gl/twAWP\nDHzZMkAVAgMBAAECggEAFuatGQtO5Zx3UE5jE5Kqc2ZHG/8VEtlScO/RyUPnVQcM\ntv9NrZa3tDGHeynHS8cbnJjW53+cmTGZ0FGgrxRD4UiBuH8IFhC9ENcJX1fuq1AB\nzDV631eJRh0B89qGL8J/FPw3A42h+skW7cJaPEwGwP+Zqb/o7/Crt/8PvbtAHAUf\nJ/hUZX736TZ+PkA+8LiYd13JgLYlxWDcfV5X4dAQK6U/gwHI28T1NI6nyOYGHsNk\nF/+UCmgzj2UTgvFDPwXeFV/uAzX4uE1XrhE9qIAMcF5JQbp7jsao0QN6g27JDJjh\nimLkGozaTNl/mLH8vGPVU3cE+TKeTNQ2L3m+BWUQMQKBgQDn9QmdhXNoKNSIQwS2\nZY5nZJha+St62EIfIGNVH/4qLzroaryR9MG5+ZJzEHZtFyQGNTa3qfgb3P/Dj9b3\nsMVcEGCjdwPkc7FcHJa0q0qxq/fCnKr52W3ncFphQqPU2ezl3fiNWE3pB8rMQxj4\n8DdZD9BrgejQGIvjLFULHScAkQKBgQDSBxc2nlgGIpAiEmUcxA8Qsqp/sKwEgbSy\nnR9q6xbtlrAHc2Ktf/XNNBiT39xI2kWvajJ4aSWM7uIZ22EoBdF9HsqnRD6fi9tE\nx4hxsJ/Doh17tCfiWwOLl7Av+n1NAoUyuMJunUTR6mahvIbuqCetz/2YDNwWcbDH\nQfFkiQoJRQKBgQDfXuoWhje/u2oHmjpEh4Hd8VKCcOa9EtqB7QebJwb0iqz4uijD\niWaxeDPemKDipuErFT2PGp/x/R1TrwW9Wr6DzMWzRN47tmm6oVFDxJxWgptCDurb\nVdXvhROUC7+HLyFhryM2wi2s1bMmhwraV0GFg6Qak2ymUK0NZFi1Liqr8QKBgAYB\nceZ77KRwRJLU19NUv+GIWlvAX4rZcqNQ3t8dzdAJaQstf3ral9rATJud4RysMSXs\n8XiD+TDoe8qlfUe5st3TDZRu3SOOyjxTQFGP7WGYtyMcaa+NTrKlKcKVdRPIqKpk\nohqroJYoD7s8OteEM25C7kt0wq5ZneZ0ukRXrtPJAoGAViUrEZvStCERY4xf1vWm\n+HLZZrqFTTl5DIFFO//evyzFaJ6GObL/TsiPEQ6ia1kudCAOqzE+NEW9T6jJ0KME\nozO6AHSRvOe3qR69bWLyC1wWwVF/MrpHtvrOjSabkKDfUIgpfxLK1gR4X4YuN1M/\np5BxCDUk21rpAoor6e+VOf8=\n-----END PRIVATE KEY-----\n",
+  "client_email": "bitirme@cosmic-stacker-224106.iam.gserviceaccount.com",
+  "client_id": "111636202984144377049",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/bitirme%40cosmic-stacker-224106.iam.gserviceaccount.com"
+}
