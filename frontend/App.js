@@ -18,8 +18,9 @@ import io from 'socket.io-client';
 const config = require('./config.json');
 
 const MainNavigator = createStackNavigator({
-  Login: { screen: Login },
   Game: { screen: Game },
+  Login: { screen: Login },
+  
   CameraScreen: { screen: CameraScreen },
   GalleryScreen: {screen: GalleryScreen},
   MainMenu: {screen: MainMenu},

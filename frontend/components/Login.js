@@ -7,6 +7,9 @@ import axios from 'axios';
 axios.defaults.withCredentials = true;
 
 export default class Login extends React.Component {
+  static navigationOptions = {
+    headerShown: false
+  };
   constructor(props) {
     super(props);
     this.state = {

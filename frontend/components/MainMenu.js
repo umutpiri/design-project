@@ -8,8 +8,8 @@ export default class MainMenu extends React.Component {
     };
   };
 
-  enterQueue() {
-    console.log('enter Queue');
+  goGame() {
+    this.props.navigation.navigate('Game');
   }
 
   goGallery() {
@@ -27,7 +27,7 @@ export default class MainMenu extends React.Component {
   render() {
     return (
       <View style={styles.MainContainer}>
-        <Button style={styles.SeparatorLine} title="Enter Queue" onPress={() => this.enterQueue()} />
+        <Button style={styles.SeparatorLine} title="Game" onPress={() => this.goGame()} />
         <View style={{height: 20}}/>
         <Button style={styles.SeparatorLine} title="Gallery" onPress={() => this.goGallery()} />
         <View style={{height: 20}}/>
