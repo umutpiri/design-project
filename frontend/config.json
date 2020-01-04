@@ -1,0 +1,4 @@
+{
+  "server2" : "https://hucard-backend.herokuapp.com",
+  "server" : "http://192.168.1.31:8383" 
+}

@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "test01-login",
+    "name": "garduate-real",
     "description": "No description",
-    "slug": "snack-c105c844-96f4-4905-bc1f-8919140d3c0b",
+    "slug": "snack-92594efe-4f0f-4a2b-a752-fd7d35061398",
     "privacy": "unlisted",
-    "sdkVersion": "35.0.0",
+    "sdkVersion": "36.0.0",
     "version": "1.0.0",
     "orientation": "portrait",
     "primaryColor": "#cccccc",
