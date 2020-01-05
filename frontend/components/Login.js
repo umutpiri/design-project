@@ -21,6 +21,7 @@ export default class Login extends React.Component {
   render() {
     const { navigate } = this.props.navigation;
     var onLoginSubmit = () => {
+      console.log("LOGIN ATTEMPT");
       axios
         .post(config.server + '/login', {
           username: this.state.username,

@@ -1,14 +1,40 @@
 import React, { Component } from "react";
-import { Text, View, Image, StyleSheet, Dimensions, ImageBackground } from "react-native";
+import {
+  Text,
+  View,
+  Image,
+  StyleSheet,
+  Dimensions,
+  ImageBackground
+} from "react-native";
 
 const images = {
-	water: require('../assets/water.png'),
-	fire: require('../assets/fire.png'),
-	earth: require('../assets/earth.png')
-}
+  water: require("../assets/water.png"),
+  fire: require("../assets/fire.png"),
+	earth: require("../assets/earth.png"),
+	cardBack: require("../assets/monster-card-back.png")
+};
 
 export default class GameCard extends Component {
   render() {
+		if(this.props.cardState === "empty"){
+			return (<View style={{width: 100, height: 150, borderWidth: 2, borderRadius: 5, backgroundColor: '#ccc'}}></View>);
+		}
+		else if(this.props.cardState === "unknown"){
+			return(<View style={{width: 100, height: 150, borderWidth: 2, borderRadius: 5, backgroundColor: '#000'}}>
+				<Image
+          style={{
+            flex: 1,
+            margin: 5,
+            width: undefined,
+            height: undefined,
+            overflow: "hidden",
+            borderRadius: 5
+          }}
+          source={images.cardBack}
+        ></Image>
+			</View>)
+		}
     return (
       <View
         style={{
@@ -20,9 +46,18 @@ export default class GameCard extends Component {
           backgroundColor: this.props.color || "white"
         }}
       >
-        <ImageBackground source={images[this.props.type]} style={{ flex: 1, margin: 5}}>
-          <Text>{this.props.type}</Text>
-        </ImageBackground>
+        <Image
+          style={{
+            flex: 1,
+            margin: 5,
+            width: undefined,
+            height: undefined,
+            overflow: "hidden",
+            borderRadius: 5
+          }}
+          source={images[this.props.type]}
+        ></Image>
+
         <View
           style={{
             position: "absolute",
@@ -36,12 +71,13 @@ export default class GameCard extends Component {
           <Text
             style={{
               backgroundColor: "white",
-              borderRadius: 50,
+              borderRadius: 15,
               borderWidth: 2,
               width: 30,
               height: 30,
               textAlign: "center",
-              textAlignVertical: "center"
+              textAlignVertical: "center",
+              overflow: 'hidden'
             }}
           >
             {this.props.power}

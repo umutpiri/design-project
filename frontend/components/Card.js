@@ -13,7 +13,7 @@ export default class Card extends Component {
           margin: 10,
           width: screenWidth / 2.6,
           height: screenWidth / 2.3,
-          backgroundColor: this.props.correctness ? 'green' : 'red',
+          backgroundColor: 'gray',
           borderRadius: 10
         }}>
         <Image

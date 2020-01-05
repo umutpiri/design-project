@@ -49,7 +49,6 @@ export default class GalleryScreen extends React.Component {
                   <Card
                     url={item.url}
                     place={item.place}
-                    correctness={item.score > 0.3}
                   />
                 )}
               />
