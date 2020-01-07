@@ -13,10 +13,14 @@ import {
   Alert,
   TouchableWithoutFeedback,
   TouchableOpacity,
+  Animated,
+  Easing,
+  Dimensions,
 } from 'react-native';
 
 const config = require('../config.json');
 import GameCard from './GameCard';
+import PointBall from './PointBall';
 import axios from 'axios';
 
 import io from 'socket.io-client';
@@ -29,6 +33,12 @@ const images = {
 
 const TIME_DURATION = 10;
 const DOT_OFFSET = 17;
+
+const TYPE_OFFSETS = {
+  fire: 2,
+  water: 35,
+  earth: 68,
+};
 
 const GAME_STATES = {
   QUEUE: 0,
@@ -77,9 +87,47 @@ export default class Game extends React.Component {
       },
       playerCardState: 'empty',
       playerPoints: [[], [], []],
-      opponentPoints: [[], [], []]
+      opponentPoints: [[], [], []],
+      winnerBallV: new Animated.Value(170),
+      isWinner: false,
+      winnerType: 'fire',
+      winnerColor: 'red',
+      isAnimation: false,
     };
     this.socket = io(config.server);
+  }
+
+  playAnimation(isWinner, type, color, newPoints) {
+    var index = Math.floor(TYPE_OFFSETS[type] / 30);
+    var points = isWinner ? this.state.playerPoints : this.state.opponentPoints;
+    var length = points[index].length;
+    console.log(color);
+    console.log(index);
+    console.log(points[index]);
+    if (!points[index].includes(color)) {
+      this.setState(
+        {
+          isWinner,
+          winnerType: type,
+          winnerColor: color,
+          isAnimation: true,
+          winnerBallV: new Animated.Value(170),
+        },
+        () => {
+          Animated.timing(this.state.winnerBallV, {
+            toValue: 35 + 30 * length,
+            duration: 2000,
+            easing: Easing.bounce,
+          }).start(() => {
+            this.setState({
+              isAnimation: false,
+              playerPoints: newPoints.playerPoints,
+              opponentPoints: newPoints.opponentPoints,
+            });
+          });
+        }
+      );
+    }
   }
 
   componentDidMount() {
@@ -96,7 +144,7 @@ export default class Game extends React.Component {
     });
     this.socket.on('enter match', opponent => {
       console.log(opponent);
-      this.setState({ opponent: opponent});
+      this.setState({ opponent: opponent });
       this.enterMatch();
     });
     this.socket.on('unknown card played', () => {
@@ -104,26 +152,62 @@ export default class Game extends React.Component {
     });
     this.socket.on('fight result', data => {
       console.log(data);
-      if(data.winner.card === undefined || data.loser.card === undefined){
-        console.log("boş kartlar");
-        if(this.socket.id === data.winner.socketId){
-          this.setState({playerPoints: data.winner.points, opponentPoints: data.loser.points});
-        }else{
-          this.setState({playerPoints: data.loser.points, opponentPoints: data.winner.points});
+      if (data.winner.card === undefined || data.loser.card === undefined) {
+        console.log('boş kartlar');
+        if (data.winner.card === undefined && data.loser.card === undefined) {
+          // both cards are empty it is a tie
+        } else if (this.socket.id === data.winner.socketId) {
+          // opponent not played a card
+          this.playAnimation(
+            true,
+            data.winner.card.type,
+            data.winner.card.color,
+            {
+              playerPoints: data.winner.points,
+              opponentPoints: data.loser.points,
+            }
+          );
+        } else {
+          // player not played a card
+          if (!data.tied)
+            this.playAnimation(
+              false,
+              data.winner.card.type,
+              data.winner.card.color,
+              {
+                playerPoints: data.loser.points,
+                opponentPoints: data.winner.points,
+              }
+            );
         }
-      }else if (this.socket.id === data.winner.socketId) {
+      } else if (this.socket.id === data.winner.socketId) {
         // this client is winner
+        if (!data.tied)
+          this.playAnimation(
+            true,
+            data.winner.card.type,
+            data.winner.card.color,
+            {
+              playerPoints: data.winner.points,
+              opponentPoints: data.loser.points,
+            }
+          );
         this.setState({
-          playerPoints: data.winner.points,
-          opponentPoints: data.loser.points,
           opponentCard: data.loser.card,
           opponentCardState: 'played',
         });
       } else {
         // this client is loser
+        this.playAnimation(
+          false,
+          data.winner.card.type,
+          data.winner.card.color,
+          {
+            playerPoints: data.loser.points,
+            opponentPoints: data.winner.points,
+          }
+        );
         this.setState({
-          opponentPoints: data.winner.points,
-          playerPoints: data.loser.points,
           opponentCard: data.winner.card,
           opponentCardState: 'played',
         });
@@ -134,36 +218,39 @@ export default class Game extends React.Component {
           playerCardState: 'empty',
           opponentCardState: 'empty',
           playedCard: {},
-          opponentCard: {}
+          opponentCard: {},
         });
         console.log('fight finished');
       }, 3000);
     });
-    this.socket.on("end match", (winId, reason, amount) => {
+    this.socket.on('end match', (winId, reason, amount) => {
       var title;
       var message = reason;
-      if(winId == "tie"){
-        title = "TIE";
-      }else if(winId === this.socket.id){
-        title = "YOU WON "+amount.toString()+" COINS";
-      }else{
-        title = "YOU LOSE";
+      if (winId == 'tie') {
+        title = 'TIE';
+      } else if (winId === this.socket.id) {
+        title = 'YOU WON ' + amount.toString() + ' COINS';
+      } else {
+        title = 'YOU LOSE';
       }
       //setTimeout(() => this.setState({gameState: GAME_STATES.FINISH}), 1000);
-      Alert.alert(title, message, [
-
-                {
-                  text: 'OK',
-                  onPress: () => {
-                    this.setState({gameState: GAME_STATES.QUEUE})
-                  },
-                },
-              ],
-              { cancelable: false });
+      Alert.alert(
+        title,
+        message,
+        [
+          {
+            text: 'OK',
+            onPress: () => {
+              this.setState({ gameState: GAME_STATES.QUEUE });
+            },
+          },
+        ],
+        { cancelable: false }
+      );
       setTimeout(() => {
         this.setState({
-          playerPoints: [[],[], []],
-          opponentPoints: [[],[], []],
+          playerPoints: [[], [], []],
+          opponentPoints: [[], [], []],
           playedCard: {},
           opponentCard: {},
           playerCardState: 'empty',
@@ -171,7 +258,7 @@ export default class Game extends React.Component {
         });
         console.log('fight finished');
       }, 3000);
-    })
+    });
   }
 
   componentWillUnmount() {
@@ -195,8 +282,10 @@ export default class Game extends React.Component {
   renderQueue() {
     if (this.state.queueEntered) {
       return (
-        <View style={{ flexDirection: 'row' }}>
-          <Text>Waiting for opponent...</Text>
+        <View>
+          <Text style={{ marginBottom: 20, color: 'white' }}>
+            Waiting for opponent...
+          </Text>
           <Button onPress={() => this.leaveQueue()} title="Exit Queue" />
         </View>
       );
@@ -206,7 +295,7 @@ export default class Game extends React.Component {
   }
 
   playCard(index) {
-    if(this.state.playerCardState !== 'played'){
+    if (this.state.playerCardState !== 'played') {
       var cards = this.state.cards;
       var current = cards[index];
       cards.splice(index, 1);
@@ -222,6 +311,14 @@ export default class Game extends React.Component {
   }
 
   renderScreen() {
+    const winnerStyle = {
+      bottom: this.state.winnerBallV,
+      left: TYPE_OFFSETS[this.state.winnerType],
+    };
+    const lostStyle = {
+      top: this.state.winnerBallV,
+      right: TYPE_OFFSETS[this.state.winnerType],
+    };
     if (this.state.gameState === GAME_STATES.QUEUE) {
       return (
         <View
@@ -229,6 +326,7 @@ export default class Game extends React.Component {
             flex: 1,
             justifyContent: 'center',
             alignItems: 'center',
+            backgroundColor: '#003f5c',
           }}>
           {this.renderQueue()}
         </View>
@@ -288,23 +386,17 @@ export default class Game extends React.Component {
                     width: 30,
                     height: 30,
                     borderRadius: 50,
+                    borderColor: 'white',
                     overflow: 'hidden',
                     zIndex: 10,
                   }}
                   source={images.fire}
-                />
-                {this.state.playerPoints[0].map((item, index) => (
-                  <View
-                  key = {index.toString()}
-                  style={{
-                    width: 30,
-                    height: 30,
-                    borderRadius: 50,
-                    backgroundColor: item,
-                    translateY: DOT_OFFSET + DOT_OFFSET*index,
-                    zIndex: 9-index,
+                  ref={playerFire => {
+                    this.playerFire = playerFire;
                   }}
                 />
+                {this.state.playerPoints[0].map((item, index) => (
+                  <PointBall key={index.toString()} item={item} index={index} />
                 ))}
               </View>
               <View
@@ -324,17 +416,7 @@ export default class Game extends React.Component {
                   source={images.water}
                 />
                 {this.state.playerPoints[1].map((item, index) => (
-                  <View
-                  key = {index.toString()}
-                  style={{
-                    width: 30,
-                    height: 30,
-                    borderRadius: 50,
-                    backgroundColor: item,
-                    translateY: DOT_OFFSET + DOT_OFFSET*index,
-                    zIndex: 9-index,
-                  }}
-                />
+                  <PointBall key={index.toString()} item={item} index={index} />
                 ))}
               </View>
               <View
@@ -354,17 +436,7 @@ export default class Game extends React.Component {
                   source={images.earth}
                 />
                 {this.state.playerPoints[2].map((item, index) => (
-                  <View
-                  key = {index.toString()}
-                  style={{
-                    width: 30,
-                    height: 30,
-                    borderRadius: 50,
-                    backgroundColor: item,
-                    translateY: DOT_OFFSET + DOT_OFFSET*index,
-                    zIndex: 9-index,
-                  }}
-                />
+                  <PointBall key={index.toString()} item={item} index={index} />
                 ))}
               </View>
             </View>
@@ -378,7 +450,7 @@ export default class Game extends React.Component {
               <View
                 style={{
                   flexDirection: 'column',
-                  marginBottom: 3,
+                  marginTop: 3,
                   marginLeft: 4,
                 }}>
                 <Image
@@ -392,23 +464,13 @@ export default class Game extends React.Component {
                   source={images.earth}
                 />
                 {this.state.opponentPoints[2].map((item, index) => (
-                  <View
-                  key = {index.toString()}
-                  style={{
-                    width: 30,
-                    height: 30,
-                    borderRadius: 50,
-                    backgroundColor: item,
-                    translateY: -DOT_OFFSET - DOT_OFFSET*index,
-                    zIndex: 9-index,
-                  }}
-                />
+                  <PointBall key={index.toString()} item={item} index={index} />
                 ))}
               </View>
               <View
                 style={{
                   flexDirection: 'column',
-                  marginBottom: 3,
+                  marginTop: 3,
                   marginLeft: 4,
                 }}>
                 <Image
@@ -422,23 +484,13 @@ export default class Game extends React.Component {
                   source={images.water}
                 />
                 {this.state.opponentPoints[1].map((item, index) => (
-                  <View
-                  key = {index.toString()}
-                  style={{
-                    width: 30,
-                    height: 30,
-                    borderRadius: 50,
-                    backgroundColor: item,
-                    translateY: -DOT_OFFSET - DOT_OFFSET*index,
-                    zIndex: 9-index,
-                  }}
-                />
+                  <PointBall key={index.toString()} item={item} index={index} />
                 ))}
               </View>
               <View
                 style={{
                   flexDirection: 'column',
-                  marginBottom: 3,
+                  marginTop: 3,
                   marginLeft: 4,
                 }}>
                 <Image
@@ -450,22 +502,32 @@ export default class Game extends React.Component {
                     zIndex: 10,
                   }}
                   source={images.fire}
-                />
-                {this.state.opponentPoints[0].map((item, index) => (
-                  <View
-                  key = {index.toString()}
-                  style={{
-                    width: 30,
-                    height: 30,
-                    borderRadius: 50,
-                    backgroundColor: item,
-                    translateY: -DOT_OFFSET - DOT_OFFSET*index,
-                    zIndex: 9-index,
+                  ref={oppFire => {
+                    this.oppFire = oppFire;
                   }}
                 />
+                {this.state.opponentPoints[0].map((item, index) => (
+                  <PointBall key={index.toString()} item={item} index={index} />
                 ))}
               </View>
             </View>
+            {this.state.isAnimation ? (
+              <Animated.View
+                style={[
+                  {
+                    width: 30,
+                    height: 30,
+                    backgroundColor: this.state.winnerColor,
+                    borderRadius: 150,
+                    borderWidth: 2,
+                    borderColor: 'white',
+                    position: 'absolute',
+                    zIndex: 10,
+                  },
+                  this.state.isWinner ? winnerStyle : lostStyle,
+                ]}
+              />
+            ) : null}
           </ImageBackground>
           <View style={{ height: 200, backgroundColor: '#AEADAD' }}>
             <FlatList

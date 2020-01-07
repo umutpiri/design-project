@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, StyleSheet, TextInput, Button, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 
 const config = require('../config.json');
 import axios from 'axios';
@@ -7,7 +7,7 @@ import axios from 'axios';
 axios.defaults.withCredentials = true;
 
 export default class Login extends React.Component {
-  static navigationOptions = {
+   static navigationOptions = {
     headerShown: false
   };
   constructor(props) {
@@ -17,56 +17,100 @@ export default class Login extends React.Component {
       password: 'password',
       isLoading: false
     };
+    this.login = this.login.bind(this);
   }
-  render() {
-    const { navigate } = this.props.navigation;
-    var onLoginSubmit = () => {
-      console.log("LOGIN ATTEMPT");
-      axios
+
+  login(){
+    console.log("LOGIN SENT");
+    axios
         .post(config.server + '/login', {
           username: this.state.username,
           password: this.state.password,
         })
         .then(response => {
-          if (response.status === 401) {
-            throw new Error('Auth faild');
-          }
-
           console.log('Logged in');
-          navigate('MainMenu');
+          this.props.navigation.navigate('MainMenu');
         })
         .catch(error => {
           console.log(error);
           alert('Could not login, check your credintials');
         });
-    };
+  }
+
+  render(){
+    const { navigate } = this.props.navigation;
     return (
-      <View>
-        <View style={{ height: 50 }} />
-        <Text style={{ fontWeight: 'bold', textAlign: "center", color:'green', margin :5, fontSize: 35}}>HU- CARD</Text>
-        <TextInput
-          placeholder="username"
-          style={{ height: 40, borderColor: 'gray', borderWidth: 1, margin: 10, padding: 3 }}
-          value={this.state.username}
-          onChangeText={text => {
-            this.setState({ username: text });
-          }}
-        />
-        <View style={{ height: 10 }} />
-        <TextInput
-          placeholder="password"
-          secureTextEntry={true}
-          style={{ height: 40, borderColor: 'gray', borderWidth: 1, margin: 10, padding: 3 }}
-          value={this.state.password}
-          onChangeText={text => {
-            this.setState({ password: text });
-          }}
-        />
-        <View style={{ height: 10 }} />
-        <View style={{margin: 10}}>
-          <Button title="Login" onPress={() => onLoginSubmit()} />
+      <View style={styles.container}>
+        <Text style={styles.logo}>H-Travel</Text>
+        <View style={styles.inputView} >
+          <TextInput  
+            autoCapitalize={"none"}
+            style={styles.inputText}
+            placeholder="Username..." 
+            placeholderTextColor="#003f5c"
+            value={this.state.username}
+            onChangeText={text => this.setState({username:text})}/>
         </View>
+        <View style={styles.inputView} >
+          <TextInput  
+            autoCapitalize={"none"}
+            secureTextEntry
+            style={styles.inputText}
+            placeholder="Password..." 
+            placeholderTextColor="#003f5c"
+            value={this.state.password}
+            onChangeText={text => this.setState({password:text})}/>
+        </View>
+        <TouchableOpacity style={styles.loginBtn} onPress={this.login} >
+          <Text style={styles.loginText} >LOGIN</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={{marginTop: 25}} onPress={() => this.props.navigation.navigate('Register')}>
+          <Text style={styles.loginText}>Signup</Text>
+        </TouchableOpacity>
+
       </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#003f5c',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logo:{
+    fontWeight:"bold",
+    fontSize:50,
+    color:"#fb5b5a",
+    marginBottom:40
+  },
+  inputView:{
+    width:"80%",
+    backgroundColor:"#465881",
+    borderRadius:25,
+    height:50,
+    marginBottom:20,
+    justifyContent:"center",
+    padding:20
+  },
+  inputText:{
+    height:50,
+    color:"white"
+  },
+  loginBtn:{
+    width:"80%",
+    backgroundColor:"#fb5b5a",
+    borderRadius:25,
+    height:50,
+    alignItems:"center",
+    justifyContent:"center",
+    marginTop:40,
+    marginBottom:10
+  },
+  loginText:{
+    color:"white",
+    fontWeight: 'bold'
+  }
+});

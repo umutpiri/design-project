@@ -1,5 +1,12 @@
 import React from 'react';
-import { Text, View, StyleSheet, TextInput, Button } from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  TextInput,
+  Button,
+  TouchableOpacity,
+} from 'react-native';
 
 export default class MainMenu extends React.Component {
   static navigationOptions = ({ navigation }) => {
@@ -20,33 +27,55 @@ export default class MainMenu extends React.Component {
     this.props.navigation.navigate('CameraScreen');
   }
 
-  goPlaceDefine(){
+  goPlaceDefine() {
     this.props.navigation.navigate('PhotoPlace');
+  }
+
+  goCards() {
+    this.props.navigation.navigate('PlayerCards');
   }
 
   render() {
     return (
-      <View style={styles.MainContainer}>
-        <Button style={styles.SeparatorLine} title="Game" onPress={() => this.goGame()} />
-        <View style={{height: 20}}/>
-        <Button style={styles.SeparatorLine} title="Gallery" onPress={() => this.goGallery()} />
-        <View style={{height: 20}}/>
-        <Button style={styles.SeparatorLine} title="Camera" onPress={() => this.goCamera()} />
+      <View style={styles.container}>
+        <TouchableOpacity style={styles.loginBtn} onPress={() => this.goGame()}>
+          <Text style={styles.loginText}>Game</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.loginBtn}
+          onPress={() => this.goCards()}>
+          <Text style={styles.loginText}>Cards</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.loginBtn}
+          onPress={() => this.goGallery()}>
+          <Text style={styles.loginText}>Gallery</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.loginBtn}
+          onPress={() => this.goCamera()}>
+          <Text style={styles.loginText}>Camera</Text>
+        </TouchableOpacity>
       </View>
     );
   }
 }
+
 const styles = StyleSheet.create({
-  MainContainer: {
+  container: {
     flex: 1,
+    backgroundColor: '#003f5c',
+    alignItems: 'center',
     justifyContent: 'center',
-    //alignItems: 'center',
-    margin: 6,
   },
-  SeparatorLine: {
-    backgroundColor: '#fff',
-    width: 1,
-    height: 40,
-    margin: 6,
+  loginBtn: {
+    width: '80%',
+    backgroundColor: '#fb5b5a',
+    borderRadius: 25,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 40,
+    marginBottom: 10,
   },
 });
