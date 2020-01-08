@@ -31,8 +31,8 @@ export default class MainMenu extends React.Component {
     this.props.navigation.navigate('PhotoPlace');
   }
 
-  goCards() {
-    this.props.navigation.navigate('PlayerCards');
+  goDeck() {
+    this.props.navigation.navigate('Deck');
   }
 
   render() {
@@ -43,8 +43,8 @@ export default class MainMenu extends React.Component {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.loginBtn}
-          onPress={() => this.goCards()}>
-          <Text style={styles.loginText}>Cards</Text>
+          onPress={() => this.goDeck()}>
+          <Text style={styles.loginText}>Deck</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.loginBtn}

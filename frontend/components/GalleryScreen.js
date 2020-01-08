@@ -9,7 +9,7 @@ import {
   FlatList,
 } from 'react-native';
 import axios from 'axios';
-import Card from './Card';
+import PlaceCard from './PlaceCard';
 
 var config = require('../config.json');
 
@@ -17,6 +17,7 @@ export default class GalleryScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
       title: 'Gallery',
+      headerRight: <View/>
     };
   };
   constructor(props) {
@@ -46,7 +47,7 @@ export default class GalleryScreen extends React.Component {
                 data={this.state.images}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item }) => (
-                  <Card
+                  <PlaceCard
                     url={item.url}
                     place={item.place}
                   />
@@ -70,7 +71,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 20,
-    backgroundColor: 'white',
+    backgroundColor: '#003f5c',
   },
   grid: { justifyContent: 'center', flexDirection: 'row', flexWrap: 'wrap' }
 });

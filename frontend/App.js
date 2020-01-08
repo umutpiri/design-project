@@ -7,7 +7,8 @@ import Game  from './components/Game';
 import CameraScreen from './components/CameraScreen';
 import GalleryScreen from './components/GalleryScreen';
 import MainMenu from './components/MainMenu';
-import PhotoPlace from './components/PhotoPlace';
+import Register from './components/Register';
+import Deck from './components/Deck'
 
 import { Card } from 'react-native-paper';
 import { createAppContainer } from 'react-navigation';
@@ -18,14 +19,27 @@ import io from 'socket.io-client';
 const config = require('./config.json');
 
 const MainNavigator = createStackNavigator({
-  Game: { screen: Game },
   Login: { screen: Login },
-  
+  Register: {screen: Register},
+  Game: { screen: Game },
   CameraScreen: { screen: CameraScreen },
   GalleryScreen: {screen: GalleryScreen},
   MainMenu: {screen: MainMenu},
-  PhotoPlace: {screen: PhotoPlace},
-});
+  Deck: {screen: Deck}
+}, {
+  initialRouteName: 'Login',
+  defaultNavigationOptions: {
+      headerStyle: {
+        backgroundColor: '#005780',
+      },
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+        fontWeight: 'bold'
+      },
+      headerTitleContainerStyle: {justifyContent: 'center'}
+  }
+}
+);
 
 const App = createAppContainer(MainNavigator);
 export default App;

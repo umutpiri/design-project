@@ -1,5 +1,12 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
 
 const config = require('../config.json');
 import axios from 'axios';
@@ -7,67 +14,83 @@ import axios from 'axios';
 axios.defaults.withCredentials = true;
 
 export default class Login extends React.Component {
-   static navigationOptions = {
-    headerShown: false
+  static navigationOptions = {
+    headerShown: false,
   };
   constructor(props) {
     super(props);
     this.state = {
       username: 'umut',
       password: 'password',
-      isLoading: false
+      isLoading: false,
     };
     this.login = this.login.bind(this);
   }
 
-  login(){
-    console.log("LOGIN SENT");
+  login() {
+    if(this.state.isLoading == true)
+      return;
+    console.log('LOGIN SENT');
+    this.setState({isLoading: true});
     axios
-        .post(config.server + '/login', {
-          username: this.state.username,
-          password: this.state.password,
-        })
-        .then(response => {
-          console.log('Logged in');
-          this.props.navigation.navigate('MainMenu');
-        })
-        .catch(error => {
-          console.log(error);
-          alert('Could not login, check your credintials');
-        });
+      .post(config.server + '/login', {
+        username: this.state.username,
+        password: this.state.password,
+      })
+      .then(response => {
+        this.setState({ isLoading: false });
+        console.log('Logged in');
+        this.props.navigation.replace('MainMenu');
+        //this.props.navigation.navigate('MainMenu');
+      })
+      .catch(error => {
+        this.setState({ isLoading: false });
+        console.log(error);
+        alert('Could not login, check your credintials');
+      });
   }
 
-  render(){
+  render() {
     const { navigate } = this.props.navigation;
     return (
       <View style={styles.container}>
         <Text style={styles.logo}>H-Travel</Text>
-        <View style={styles.inputView} >
-          <TextInput  
-            autoCapitalize={"none"}
+        <View style={styles.inputView}>
+          <TextInput
+            autoCapitalize={'none'}
             style={styles.inputText}
-            placeholder="Username..." 
+            placeholder="Username..."
             placeholderTextColor="#003f5c"
             value={this.state.username}
-            onChangeText={text => this.setState({username:text})}/>
+            onChangeText={text => this.setState({ username: text })}
+          />
         </View>
-        <View style={styles.inputView} >
-          <TextInput  
-            autoCapitalize={"none"}
+        <View style={styles.inputView}>
+          <TextInput
+            autoCapitalize={'none'}
             secureTextEntry
             style={styles.inputText}
-            placeholder="Password..." 
+            placeholder="Password..."
             placeholderTextColor="#003f5c"
             value={this.state.password}
-            onChangeText={text => this.setState({password:text})}/>
+            onChangeText={text => this.setState({ password: text })}
+            onSubmitEditing={this.login}
+          />
         </View>
-        <TouchableOpacity style={styles.loginBtn} onPress={this.login} >
-          <Text style={styles.loginText} >LOGIN</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={{marginTop: 25}} onPress={() => this.props.navigation.navigate('Register')}>
-          <Text style={styles.loginText}>Signup</Text>
-        </TouchableOpacity>
-
+        {this.state.isLoading ? (
+          <ActivityIndicator size='large' color='#fb5b5a'/>
+        ) : (
+          <View style={{width: '100%', justifyContent: 'center', alignItems: 'center'}}>
+            <TouchableOpacity style={styles.loginBtn} onPress={this.login}>
+              <Text style={styles.loginText}>LOGIN</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{ marginTop: 15, paddingBottom: 10, paddingTop: 10 }}
+              onPress={() => this.props.navigation.navigate('Register')}>
+              <Text style={styles.loginText}>Signup</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
     );
   }
@@ -80,37 +103,37 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  logo:{
-    fontWeight:"bold",
-    fontSize:50,
-    color:"#fb5b5a",
-    marginBottom:40
+  logo: {
+    fontWeight: 'bold',
+    fontSize: 50,
+    color: '#fb5b5a',
+    marginBottom: 40,
   },
-  inputView:{
-    width:"80%",
-    backgroundColor:"#465881",
-    borderRadius:25,
-    height:50,
-    marginBottom:20,
-    justifyContent:"center",
-    padding:20
+  inputView: {
+    width: '80%',
+    backgroundColor: '#465881',
+    borderRadius: 25,
+    height: 50,
+    marginBottom: 20,
+    justifyContent: 'center',
+    padding: 20,
   },
-  inputText:{
-    height:50,
-    color:"white"
+  inputText: {
+    height: 50,
+    color: 'white',
   },
-  loginBtn:{
-    width:"80%",
-    backgroundColor:"#fb5b5a",
-    borderRadius:25,
-    height:50,
-    alignItems:"center",
-    justifyContent:"center",
-    marginTop:40,
-    marginBottom:10
+  loginBtn: {
+    width: '80%',
+    backgroundColor: '#fb5b5a',
+    borderRadius: 25,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 40,
+    marginBottom: 10,
   },
-  loginText:{
-    color:"white",
-    fontWeight: 'bold'
-  }
+  loginText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
 });

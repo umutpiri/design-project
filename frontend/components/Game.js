@@ -18,6 +18,12 @@ import {
   Dimensions,
 } from 'react-native';
 
+import {
+  FontAwesome,
+  Ionicons,
+  MaterialCommunityIcons,
+} from '@expo/vector-icons';
+
 const config = require('../config.json');
 import GameCard from './GameCard';
 import PointBall from './PointBall';
@@ -36,8 +42,8 @@ const DOT_OFFSET = 17;
 
 const TYPE_OFFSETS = {
   fire: 2,
-  water: 35,
-  earth: 68,
+  water: 36,
+  earth: 70,
 };
 
 const GAME_STATES = {
@@ -54,7 +60,7 @@ export default class Game extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      gameState: GAME_STATES.QUEUE,
+      gameState: GAME_STATES.GAME,
       queueEntered: false,
       cards: [
         {
@@ -71,19 +77,13 @@ export default class Game extends React.Component {
           color: 'blue',
           power: 2,
           type: 'earth',
-        },
+        }
       ],
       opponent: 'guestuser18574',
       opponentCard: {
-        color: 'purple',
-        power: 1,
-        type: 'fire',
       },
       opponentCardState: 'empty',
       playedCard: {
-        color: 'red',
-        power: 2,
-        type: 'fire',
       },
       playerCardState: 'empty',
       playerPoints: [[], [], []],
@@ -198,15 +198,16 @@ export default class Game extends React.Component {
         });
       } else {
         // this client is loser
-        this.playAnimation(
-          false,
-          data.winner.card.type,
-          data.winner.card.color,
-          {
-            playerPoints: data.loser.points,
-            opponentPoints: data.winner.points,
-          }
-        );
+        if (!data.tied)
+          this.playAnimation(
+            false,
+            data.winner.card.type,
+            data.winner.card.color,
+            {
+              playerPoints: data.loser.points,
+              opponentPoints: data.winner.points,
+            }
+          );
         this.setState({
           opponentCard: data.winner.card,
           opponentCardState: 'played',
@@ -234,20 +235,20 @@ export default class Game extends React.Component {
         title = 'YOU LOSE';
       }
       //setTimeout(() => this.setState({gameState: GAME_STATES.FINISH}), 1000);
-      Alert.alert(
-        title,
-        message,
-        [
-          {
-            text: 'OK',
-            onPress: () => {
-              this.setState({ gameState: GAME_STATES.QUEUE });
-            },
-          },
-        ],
-        { cancelable: false }
-      );
       setTimeout(() => {
+        Alert.alert(
+          title,
+          message,
+          [
+            {
+              text: 'OK',
+              onPress: () => {
+                this.setState({ gameState: GAME_STATES.QUEUE });
+              },
+            },
+          ],
+          { cancelable: false }
+        );
         this.setState({
           playerPoints: [[], [], []],
           opponentPoints: [[], [], []],
@@ -282,16 +283,72 @@ export default class Game extends React.Component {
   renderQueue() {
     if (this.state.queueEntered) {
       return (
-        <View>
+        <>
           <Text style={{ marginBottom: 20, color: 'white' }}>
             Waiting for opponent...
           </Text>
-          <Button onPress={() => this.leaveQueue()} title="Exit Queue" />
-        </View>
+          <TouchableOpacity
+            style={{
+              width: '80%',
+              backgroundColor: '#fb5b5a',
+              borderRadius: 25,
+              height: 50,
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginTop: 40,
+              marginBottom: 10,
+            }}
+            onPress={() => this.leaveQueue()}>
+            <Text style={{ color: 'white', fontWeight: 'bold' }}>
+              Leave Queue
+            </Text>
+          </TouchableOpacity>
+        </>
       );
     } else {
-      return <Button onPress={() => this.enterQueue()} title="Enter Queue" />;
+      return (
+        <TouchableOpacity
+          style={{
+            width: '80%',
+            backgroundColor: '#fb5b5a',
+            borderRadius: 25,
+            height: 50,
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginTop: 40,
+            marginBottom: 10,
+          }}
+          onPress={() => this.enterQueue()}>
+          <Text style={{ color: 'white', fontWeight: 'bold' }}>
+            Enter Queue
+          </Text>
+        </TouchableOpacity>
+      );
     }
+  }
+
+  exitMatch() {
+    Alert.alert(
+      'Exit match',
+      'Are you sure to exit match ?',
+      [
+        {
+          text: 'Yes',
+          onPress: () => {
+            //exit match
+            this.socket.disconnect();
+            this.props.navigation.goBack();
+          },
+        },
+        {
+          text: 'No',
+          onPress: () => {
+            //stay in the match
+          },
+        },
+      ],
+      { cancelable: true }
+    );
   }
 
   playCard(index) {
@@ -321,6 +378,30 @@ export default class Game extends React.Component {
     };
     if (this.state.gameState === GAME_STATES.QUEUE) {
       return (
+        <View style={{flex: 1}}>
+        <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              backgroundColor: '#005780',
+            }}>
+            <TouchableOpacity
+              style={{
+                width: 50,
+                height: 50,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+              onPress={() => this.props.navigation.goBack()}>
+              <MaterialCommunityIcons
+                name="arrow-left"
+                style={{ color: '#fff', fontSize: 30 }}
+              />
+            </TouchableOpacity>
+            <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 20 }}>HU-Card</Text>
+            <View style={{ width: 50, height: 50 }} />
+          </View>
         <View
           style={{
             flex: 1,
@@ -328,7 +409,9 @@ export default class Game extends React.Component {
             alignItems: 'center',
             backgroundColor: '#003f5c',
           }}>
+          
           {this.renderQueue()}
+        </View>
         </View>
       );
     } else if (this.state.gameState === GAME_STATES.GAME) {
@@ -339,10 +422,22 @@ export default class Game extends React.Component {
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'space-between',
-              backgroundColor: '#D5D4D4',
+              backgroundColor: '#005780',
             }}>
-            <View style={{ width: 50, height: 50 }} />
-            <Text>{this.state.opponent}</Text>
+            <TouchableOpacity
+              style={{
+                width: 50,
+                height: 50,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+              onPress={() => this.exitMatch()}>
+              <MaterialCommunityIcons
+                name="arrow-left"
+                style={{ color: '#fff', fontSize: 30 }}
+              />
+            </TouchableOpacity>
+            <Text style={{ color: 'white', fontWeight: 'bold' }}>{this.state.opponent}</Text>
             <View style={{ width: 50, height: 50 }} />
           </View>
           <ImageBackground
@@ -529,13 +624,13 @@ export default class Game extends React.Component {
               />
             ) : null}
           </ImageBackground>
-          <View style={{ height: 200, backgroundColor: '#AEADAD' }}>
+          <View style={{ height: 200, backgroundColor: '#003f5c' }}>
             <FlatList
               contentContainerStyle={{
                 flex: 1,
                 justifyContent: 'space-around',
                 alignItems: 'center',
-                backgroundColor: '#D5D4D4',
+                backgroundColor: '#005780',
                 marginVertical: 10,
               }}
               horizontal={true}
