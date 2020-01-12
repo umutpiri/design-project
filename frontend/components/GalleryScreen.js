@@ -29,7 +29,7 @@ export default class GalleryScreen extends React.Component {
   }
 
   componentDidMount(){
-    axios.get(config.server +"/image/getAll").then(res => {
+    axios.get(config.server +"/api/getAll").then(res => {
       console.log(res);
       this.setState({images: res.data.reverse(), isLoading: false});
     }).catch(err => console.log(err));

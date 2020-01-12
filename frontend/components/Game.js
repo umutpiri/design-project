@@ -62,29 +62,11 @@ export default class Game extends React.Component {
     this.state = {
       gameState: GAME_STATES.GAME,
       queueEntered: false,
-      cards: [
-        {
-          color: 'red',
-          power: 5,
-          type: 'water',
-        },
-        {
-          color: 'blue',
-          power: 2,
-          type: 'fire',
-        },
-        {
-          color: 'blue',
-          power: 2,
-          type: 'earth',
-        }
-      ],
+      cards: [],
       opponent: 'guestuser18574',
-      opponentCard: {
-      },
+      opponentCard: {},
       opponentCardState: 'empty',
-      playedCard: {
-      },
+      playedCard: {},
       playerCardState: 'empty',
       playerPoints: [[], [], []],
       opponentPoints: [[], [], []],
@@ -93,6 +75,9 @@ export default class Game extends React.Component {
       winnerType: 'fire',
       winnerColor: 'red',
       isAnimation: false,
+      title: '',
+      message: '',
+      amount: 0,
     };
     this.socket = io(config.server);
   }
@@ -227,36 +212,21 @@ export default class Game extends React.Component {
     this.socket.on('end match', (winId, reason, amount) => {
       var title;
       var message = reason;
+      var wonAmount = 0;
       if (winId == 'tie') {
         title = 'TIE';
+        wonAmount = amount;
+        this.props.navigation.state.params.wonCoins(amount);
       } else if (winId === this.socket.id) {
-        title = 'YOU WON ' + amount.toString() + ' COINS';
+        title = 'YOU WON';
+        wonAmount = amount;
+        this.props.navigation.state.params.wonCoins(amount);
       } else {
-        title = 'YOU LOSE';
+        title = 'YOU LOST';
       }
       //setTimeout(() => this.setState({gameState: GAME_STATES.FINISH}), 1000);
       setTimeout(() => {
-        Alert.alert(
-          title,
-          message,
-          [
-            {
-              text: 'OK',
-              onPress: () => {
-                this.setState({ gameState: GAME_STATES.QUEUE });
-              },
-            },
-          ],
-          { cancelable: false }
-        );
-        this.setState({
-          playerPoints: [[], [], []],
-          opponentPoints: [[], [], []],
-          playedCard: {},
-          opponentCard: {},
-          playerCardState: 'empty',
-          opponentCardState: 'empty',
-        });
+        this.setState({ title: title, message: message, amount: amount });
         console.log('fight finished');
       }, 3000);
     });
@@ -378,8 +348,8 @@ export default class Game extends React.Component {
     };
     if (this.state.gameState === GAME_STATES.QUEUE) {
       return (
-        <View style={{flex: 1}}>
-        <View
+        <View style={{ flex: 1 }}>
+          <View
             style={{
               flexDirection: 'row',
               alignItems: 'center',
@@ -399,19 +369,20 @@ export default class Game extends React.Component {
                 style={{ color: '#fff', fontSize: 30 }}
               />
             </TouchableOpacity>
-            <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 20 }}>HU-Card</Text>
+            <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 20 }}>
+              HU-Card
+            </Text>
             <View style={{ width: 50, height: 50 }} />
           </View>
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: '#003f5c',
-          }}>
-          
-          {this.renderQueue()}
-        </View>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: '#003f5c',
+            }}>
+            {this.renderQueue()}
+          </View>
         </View>
       );
     } else if (this.state.gameState === GAME_STATES.GAME) {
@@ -437,7 +408,9 @@ export default class Game extends React.Component {
                 style={{ color: '#fff', fontSize: 30 }}
               />
             </TouchableOpacity>
-            <Text style={{ color: 'white', fontWeight: 'bold' }}>{this.state.opponent}</Text>
+            <Text style={{ color: 'white', fontWeight: 'bold' }}>
+              {this.state.opponent}
+            </Text>
             <View style={{ width: 50, height: 50 }} />
           </View>
           <ImageBackground
@@ -483,7 +456,6 @@ export default class Game extends React.Component {
                     borderRadius: 50,
                     borderColor: 'white',
                     overflow: 'hidden',
-                    zIndex: 10,
                   }}
                   source={images.fire}
                   ref={playerFire => {
@@ -506,7 +478,6 @@ export default class Game extends React.Component {
                     height: 30,
                     borderRadius: 50,
                     overflow: 'hidden',
-                    zIndex: 10,
                   }}
                   source={images.water}
                 />
@@ -526,7 +497,6 @@ export default class Game extends React.Component {
                     height: 30,
                     borderRadius: 50,
                     overflow: 'hidden',
-                    zIndex: 10,
                   }}
                   source={images.earth}
                 />
@@ -554,7 +524,6 @@ export default class Game extends React.Component {
                     height: 30,
                     borderRadius: 50,
                     overflow: 'hidden',
-                    zIndex: 10,
                   }}
                   source={images.earth}
                 />
@@ -574,7 +543,6 @@ export default class Game extends React.Component {
                     height: 30,
                     borderRadius: 50,
                     overflow: 'hidden',
-                    zIndex: 10,
                   }}
                   source={images.water}
                 />
@@ -594,7 +562,6 @@ export default class Game extends React.Component {
                     height: 30,
                     borderRadius: 50,
                     overflow: 'hidden',
-                    zIndex: 10,
                   }}
                   source={images.fire}
                   ref={oppFire => {
@@ -617,7 +584,6 @@ export default class Game extends React.Component {
                     borderWidth: 2,
                     borderColor: 'white',
                     position: 'absolute',
-                    zIndex: 10,
                   },
                   this.state.isWinner ? winnerStyle : lostStyle,
                 ]}
@@ -670,6 +636,55 @@ export default class Game extends React.Component {
       <View style={{ flex: 1 }}>
         <View style={{ height: StatusBar.currentHeight }} />
         {this.renderScreen()}
+        {this.state.title !== '' ? (
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={() =>
+              this.setState({
+                title: '',
+                message: '',
+                gameState: GAME_STATES.QUEUE,
+                playerPoints: [[], [], []],
+                opponentPoints: [[], [], []],
+                playedCard: {},
+                opponentCard: {},
+                playerCardState: 'empty',
+                opponentCardState: 'empty',
+              })
+            }
+            style={{
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              width: '100%',
+              height: '100%',
+              position: 'absolute',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Text style={{ fontSize: 30, color: 'white' }}>
+              {this.state.title}
+            </Text>
+            <Text style={{ fontSize: 20, color: 'white', margin: 15 }}>
+              {this.state.message}
+            </Text>
+            {this.state.amount !== 0 ? (
+              <View style={{ flexDirection: 'row', marginBottom: 15 }}>
+                <Text style={{ fontSize: 20, color: 'white' }}>
+                  +{this.state.amount}
+                </Text>
+                <FontAwesome
+                  name="bitcoin"
+                  style={{
+                    color: '#fff',
+                    fontSize: 20,
+                    textAlignVertical: 'center',
+                    marginLeft: 7,
+                  }}
+                />
+              </View>
+            ) : null}
+            <Text style={{ color: 'white' }}>Click to continue...</Text>
+          </TouchableOpacity>
+        ) : null}
       </View>
     );
   }

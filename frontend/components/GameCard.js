@@ -12,7 +12,7 @@ const images = {
   water: require("../assets/water.png"),
   fire: require("../assets/fire.png"),
 	earth: require("../assets/earth.png"),
-	cardBack: require("../assets/monster-card-back.png")
+	cardBack: require("../assets/h-card-back.png")
 };
 
 export default class GameCard extends Component {
@@ -29,7 +29,8 @@ export default class GameCard extends Component {
             width: undefined,
             height: undefined,
             overflow: "hidden",
-            borderRadius: 5
+            borderRadius: 5,
+            backgroundColor: '#000'
           }}
           source={images.cardBack}
         ></Image>

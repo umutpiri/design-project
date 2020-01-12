@@ -8,7 +8,8 @@ import CameraScreen from './components/CameraScreen';
 import GalleryScreen from './components/GalleryScreen';
 import MainMenu from './components/MainMenu';
 import Register from './components/Register';
-import Deck from './components/Deck'
+import Deck from './components/Deck';
+import Shop from './components/Shop';
 
 import { Card } from 'react-native-paper';
 import { createAppContainer } from 'react-navigation';
@@ -25,7 +26,8 @@ const MainNavigator = createStackNavigator({
   CameraScreen: { screen: CameraScreen },
   GalleryScreen: {screen: GalleryScreen},
   MainMenu: {screen: MainMenu},
-  Deck: {screen: Deck}
+  Deck: {screen: Deck},
+  Shop: {screen: Shop}
 }, {
   initialRouteName: 'Login',
   defaultNavigationOptions: {

@@ -39,8 +39,8 @@ export default class Login extends React.Component {
       })
       .then(response => {
         this.setState({ isLoading: false });
-        console.log('Logged in');
-        this.props.navigation.replace('MainMenu');
+        console.log(response.data);
+        this.props.navigation.replace('MainMenu', {user: response.data});
         //this.props.navigation.navigate('MainMenu');
       })
       .catch(error => {

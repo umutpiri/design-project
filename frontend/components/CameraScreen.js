@@ -30,6 +30,7 @@ export default class CameraScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
       title: 'Photo',
+      headerRight: <View />
     };
   };
 
@@ -103,7 +104,7 @@ export default class CameraScreen extends React.Component {
     });
     console.log('image uploading...');
     axios
-      .post(config.server + '/image/upload', data)
+      .post(config.server + '/api/upload', data)
       .then(res => {
         console.log(res);
         if (!res.data.accepted) {
@@ -136,7 +137,7 @@ export default class CameraScreen extends React.Component {
       .catch(err =>
         Alert.alert(
           'Wrong',
-          'it is not a photo of place!',
+          'it is not a photo of famous place!',
           [
             {
               text: 'Try Again',
