@@ -39,6 +39,9 @@ export default class GalleryScreen extends React.Component {
     if (!this.state.isLoading) {
       return (
         <View style={styles.container}>
+          <View style={{backgroundColor: '#465881', alignItems: 'center'}}>
+            <Text style={{textAlign: 'center', color: 'white'}}>You have visited {this.state.images.length} places</Text>
+          </View>
           <ScrollView
             contentComponentStyle={{ justifyContent: 'center', flex: 1 }}>
             <View style={{ flex: 1, flexWrap: 'wrap', flexDirection: 'row' }}>
@@ -70,7 +73,6 @@ export default class GalleryScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 20,
     backgroundColor: '#003f5c',
   },
   grid: { justifyContent: 'center', flexDirection: 'row', flexWrap: 'wrap' }
