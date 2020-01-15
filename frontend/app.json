@@ -1,17 +1,20 @@
 {
   "expo": {
-    "name": "garduate-real",
-    "description": "No description",
+    "name": "H-Travel",
+    "description": "Hacettepe University Graduate Project",
     "slug": "snack-92594efe-4f0f-4a2b-a752-fd7d35061398",
     "privacy": "unlisted",
     "sdkVersion": "36.0.0",
     "version": "1.0.0",
     "orientation": "portrait",
     "primaryColor": "#cccccc",
-    "icon": "https://d1wp6m56sqw74a.cloudfront.net/~assets/c9aa1be8a6a6fe81e20c3ac4106a2ebc",
+    "icon": "./assets/icons/icon.png",
     "loading": {
-      "icon": "https://d1wp6m56sqw74a.cloudfront.net/~assets/c9aa1be8a6a6fe81e20c3ac4106a2ebc",
+      "icon": "./assets/icons/icon.png",
       "hideExponentText": false
+    },
+    "android": {
+      "package": "com.umpi.htravel"
     },
     "packagerOpts": {
       "assetExts": [
