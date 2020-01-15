@@ -96,3 +96,7 @@ RNTester/Pods/*
 
 # Expo
 .expo
+
+# Keystore
+keystore.txt
+*.jks
