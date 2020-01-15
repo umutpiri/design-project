@@ -74,7 +74,7 @@ export default class CameraScreen extends React.Component {
   takePicture = async () => {
     if (this.camera) {
       let photo = await this.camera.takePictureAsync({ skipProcessing: true });
-      console.log(photo);
+      //console.log(photo);
       this.setState({ previewUri: photo.uri });
     }
   };
@@ -87,10 +87,10 @@ export default class CameraScreen extends React.Component {
       longitude: location.coords.longitude,
       latitude: location.coords.latitude,
     };
-    console.log(locationData);
+    //console.log(locationData);
     data.append('location', JSON.stringify(locationData));
     /*const manipResult = await ImageManipulator.manipulateAsync(
-        photo.uri,
+        this.state.previewUri,
         [],
         {
           compress: 0.5,
@@ -106,7 +106,7 @@ export default class CameraScreen extends React.Component {
     axios
       .post(config.server + '/api/upload', data)
       .then(res => {
-        console.log(res);
+        //console.log(res);
         if (!res.data.accepted) {
           Alert.alert(
             'Wrong',
@@ -137,7 +137,7 @@ export default class CameraScreen extends React.Component {
       .catch(err =>
         Alert.alert(
           'Wrong',
-          'it is not a photo of famous place!',
+          'It is not a photo of famous place!',
           [
             {
               text: 'Try Again',
@@ -155,7 +155,7 @@ export default class CameraScreen extends React.Component {
 
   async onCameraReady() {
     var sizes = await this.camera.getAvailablePictureSizesAsync('4:3');
-    console.log(sizes);
+    //console.log(sizes);
     if (sizes && sizes.length && sizes.length > 0)
       this.camera.pictureSize = sizes[0];
   }

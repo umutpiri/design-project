@@ -57,11 +57,11 @@ export default class Shop extends React.Component {
                 type: 'fire',
                 power: 1,
                 color: colors[Math.floor(Math.random() * 5)],
-                price: 50,
+                price: 100,
               })
             }
-            style={{ flex: 1, margin: 5 }}>
-            <ShopItem type={'fire'} color={'random'} power={1} price={50} />
+            style={{ flex: 1, margin: 5, marginTop: 10 }}>
+            <ShopItem type={'fire'} color={'random'} power={1} price={100} />
           </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={0.9}
@@ -70,11 +70,11 @@ export default class Shop extends React.Component {
                 type: 'water',
                 power: 1,
                 color: colors[Math.floor(Math.random() * 5)],
-                price: 50,
+                price: 100,
               })
             }
             style={{ flex: 1, margin: 5 }}>
-            <ShopItem type={'water'} color={'random'} power={1} price={50} />
+            <ShopItem type={'water'} color={'random'} power={1} price={100} />
           </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={0.9}
@@ -83,11 +83,11 @@ export default class Shop extends React.Component {
                 type: 'earth',
                 power: 1,
                 color: colors[Math.floor(Math.random() * 5)],
-                price: 50,
+                price: 100,
               })
             }
             style={{ flex: 1, margin: 5 }}>
-            <ShopItem type={'earth'} color={'random'} power={1} price={50} />
+            <ShopItem type={'earth'} color={'random'} power={1} price={100} />
           </TouchableOpacity>
         </ScrollView>
         {this.state.boughtCard.color ? (

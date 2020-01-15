@@ -7,6 +7,7 @@ import {
   Text,
   ScrollView,
   FlatList,
+  ActivityIndicator
 } from 'react-native';
 import axios from 'axios';
 import PlaceCard from './PlaceCard';
@@ -30,7 +31,7 @@ export default class GalleryScreen extends React.Component {
 
   componentDidMount(){
     axios.get(config.server +"/api/getAll").then(res => {
-      console.log(res);
+      //console.log(res);
       this.setState({images: res.data.reverse(), isLoading: false});
     }).catch(err => console.log(err));
   }
@@ -62,8 +63,18 @@ export default class GalleryScreen extends React.Component {
       );
     } else {
       return (
-        <View>
-          <Text>Loading</Text>
+        <View style={styles.container}>
+          <ActivityIndicator
+            style={{
+              position: 'absolute',
+              bottom: 0,
+              top: 0,
+              left: 0,
+              right: 0
+            }}
+            size={100}
+            color="#fb5b5a"
+          />
         </View>
       );
     }

@@ -38,7 +38,7 @@ export default class Deck extends React.Component {
     axios
       .get(config.server + '/api/cards')
       .then(res => {
-        console.log(res);
+        //console.log(res);
         this.setState({ cards: res.data, isLoading: false });
       })
       .catch(err => console.log(err));
@@ -58,17 +58,16 @@ export default class Deck extends React.Component {
   }
 
   cardPressed(index) {
-    console.log(index);
+    //console.log(index);
     if (this.state.combinedCard.color) return;
     if (
       this.state.card1.color === undefined ||
       this.state.card2.color === undefined
     ) {
-      console.log('UNDEFINED VAR İŞTE');
       var newCards = [...this.state.cards];
       var selectedCard = this.state.cards[index];
       newCards[index]['invisible'] = true;
-      console.log(selectedCard);
+      //console.log(selectedCard);
       this.state.cards.splice(index, 1);
       if (this.state.card1.color === undefined) {
         this.setState({ card1: selectedCard, cards: newCards }, () => {
@@ -96,7 +95,7 @@ export default class Deck extends React.Component {
         card2Id: this.state.card2.id,
       })
       .then(res => {
-        console.log(res);
+        //console.log(res);
         this.setState({ waiting: false, combinedCard: res.data });
       })
       .catch(err => {
@@ -118,7 +117,7 @@ export default class Deck extends React.Component {
     axios
       .get(config.server + '/api/cards')
       .then(res => {
-        console.log(res);
+        //console.log(res);
         this.setState({
           cards: res.data,
           card1: {},
@@ -237,7 +236,7 @@ export default class Deck extends React.Component {
               data={this.state.cards}
               keyExtractor={(item, index) => index.toString()}
               renderItem={({ item, index }) => {
-                if (item.invisible) return <></>;
+                if (item.invisible) return <View style={{width: 110, height: 150}}></View>;
                 return (
                   <TouchableOpacity
                     activeOpacity={1}

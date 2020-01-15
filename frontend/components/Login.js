@@ -20,8 +20,8 @@ export default class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: 'umut',
-      password: 'password',
+      username: '',
+      password: '',
       isLoading: false,
     };
     this.login = this.login.bind(this);
@@ -30,7 +30,6 @@ export default class Login extends React.Component {
   login() {
     if(this.state.isLoading == true)
       return;
-    console.log('LOGIN SENT');
     this.setState({isLoading: true});
     axios
       .post(config.server + '/login', {
@@ -39,9 +38,7 @@ export default class Login extends React.Component {
       })
       .then(response => {
         this.setState({ isLoading: false });
-        console.log(response.data);
         this.props.navigation.replace('MainMenu', {user: response.data});
-        //this.props.navigation.navigate('MainMenu');
       })
       .catch(error => {
         this.setState({ isLoading: false });

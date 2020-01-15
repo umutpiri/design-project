@@ -18,6 +18,20 @@ export default class MainMenu extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
       title: 'Main Menu',
+      headerRight: (
+        <TouchableOpacity onPress={() => navigation.replace('Login')}>
+          <FontAwesome
+            name="times"
+            style={{
+              color: '#fff',
+              fontSize: 40,
+              textAlignVertical: 'center',
+              marginRight: 10,
+            }}
+          />
+        </TouchableOpacity>
+      ),
+      headerLeft: <View/>
     };
   };
 
@@ -29,23 +43,20 @@ export default class MainMenu extends React.Component {
   }
 
   wonCoins = data => {
-    console.log("yeni data geldi");
-    console.log(data);
     var user = this.state.user;
     user['coin'] += data;
-    this.setState({user: user});
-  }
+    this.setState({ user: user });
+  };
 
   spendCoins = data => {
-    console.log(data);
     var user = this.state.user;
     user['coin'] -= data;
-    this.setState({user: user});
-  }
+    this.setState({ user: user });
+  };
 
   goGame() {
     this.props.navigation.navigate('Game', {
-       wonCoins: this.wonCoins 
+      wonCoins: this.wonCoins,
     });
   }
 
@@ -65,9 +76,9 @@ export default class MainMenu extends React.Component {
     this.props.navigation.navigate('Deck');
   }
 
-  goShop(){
+  goShop() {
     this.props.navigation.navigate('Shop', {
-       spendCoins: this.spendCoins 
+      spendCoins: this.spendCoins,
     });
   }
 

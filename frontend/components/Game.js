@@ -2,9 +2,6 @@ import * as React from 'react';
 import {
   Text,
   View,
-  StyleSheet,
-  TextInput,
-  Button,
   StatusBar,
   ImageBackground,
   FlatList,
@@ -60,7 +57,7 @@ export default class Game extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      gameState: GAME_STATES.GAME,
+      gameState: GAME_STATES.QUEUE,
       queueEntered: false,
       cards: [],
       opponent: 'guestuser18574',
@@ -86,9 +83,9 @@ export default class Game extends React.Component {
     var index = Math.floor(TYPE_OFFSETS[type] / 30);
     var points = isWinner ? this.state.playerPoints : this.state.opponentPoints;
     var length = points[index].length;
-    console.log(color);
-    console.log(index);
-    console.log(points[index]);
+    //console.log(color);
+    //console.log(index);
+    //console.log(points[index]);
     if (!points[index].includes(color)) {
       this.setState(
         {
@@ -123,12 +120,9 @@ export default class Game extends React.Component {
       console.log('Disconnected');
     });
     this.socket.on('update cards', cards => {
-      console.log('KARTLAR GELDİİ');
-      console.log(cards);
       this.setState({ cards: cards });
     });
     this.socket.on('enter match', opponent => {
-      console.log(opponent);
       this.setState({ opponent: opponent });
       this.enterMatch();
     });
@@ -136,9 +130,7 @@ export default class Game extends React.Component {
       this.setState({ opponentCardState: 'unknown' });
     });
     this.socket.on('fight result', data => {
-      console.log(data);
       if (data.winner.card === undefined || data.loser.card === undefined) {
-        console.log('boş kartlar');
         if (data.winner.card === undefined && data.loser.card === undefined) {
           // both cards are empty it is a tie
         } else if (this.socket.id === data.winner.socketId) {
@@ -206,7 +198,6 @@ export default class Game extends React.Component {
           playedCard: {},
           opponentCard: {},
         });
-        console.log('fight finished');
       }, 3000);
     });
     this.socket.on('end match', (winId, reason, amount) => {
@@ -226,8 +217,7 @@ export default class Game extends React.Component {
       }
       //setTimeout(() => this.setState({gameState: GAME_STATES.FINISH}), 1000);
       setTimeout(() => {
-        this.setState({ title: title, message: message, amount: amount });
-        console.log('fight finished');
+        this.setState({ title: title, message: message, amount: wonAmount });
       }, 3000);
     });
   }
@@ -326,13 +316,13 @@ export default class Game extends React.Component {
       var cards = this.state.cards;
       var current = cards[index];
       cards.splice(index, 1);
-      console.log(current);
+      //console.log(current);
       this.setState({
         cards: cards,
         playedCard: current,
         playerCardState: 'played',
       });
-      console.log('PLAYED ULANNN');
+      //console.log('PLAYED');
       this.socket.emit('play card', index);
     }
   }
@@ -600,7 +590,6 @@ export default class Game extends React.Component {
                 marginVertical: 10,
               }}
               horizontal={true}
-              onPress={item => console.log(item)}
               data={this.state.cards}
               keyExtractor={(item, index) => index.toString()}
               renderItem={({ item, index }) => (

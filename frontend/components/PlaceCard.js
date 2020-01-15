@@ -10,18 +10,20 @@ export default class PlaceCard extends Component {
           flex: 1,
           alignItems: 'center',
           justifyContent: 'space-evenly',
-          margin: 10,
-          width: screenWidth / 2.3,
-          height: screenWidth / 2,
+          margin: 5,
+          marginBottom: 0,
+          width: screenWidth / 2.35,
+          height: screenWidth / 2.05,
           backgroundColor: '#465881',
           borderWidth: 2,
           borderColor: 'white',
           borderRadius: 10
         }}>
-        <Text style={{fontWeight: 'bold', color: 'white'}}>{this.props.place}</Text>
+        <Text style={{fontWeight: 'bold', color: 'white', textAlign: 'center'}}>{this.props.place}</Text>
         <Image
-          style={{ width: screenWidth / 2.8, height: screenWidth/2.8, borderRadius: 10, overflow: 'hidden' }}
+          style={{ width: screenWidth / 2.85, height: screenWidth/2.85, borderRadius: 10, overflow: 'hidden' }}
           source={{ uri: this.props.url }}
+          resizeMethod= 'scale'
         />
         
       </View>

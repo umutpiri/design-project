@@ -34,7 +34,6 @@ export default class Register extends React.Component {
   register() {
     if(this.state.isLoading == true)
       return;
-    console.log('REGISTER SENT');
     if (this.state.password !== this.state.password2) {
       Alert.alert('Password not match');
       return;
@@ -51,7 +50,6 @@ export default class Register extends React.Component {
         email: this.state.email,
       })
       .then(response => {
-        console.log(response.data);
         this.setState({isLoading: false});
         this.props.navigation.navigate('Login');
       })
