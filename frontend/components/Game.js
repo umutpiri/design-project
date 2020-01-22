@@ -2,6 +2,9 @@ import * as React from 'react';
 import {
   Text,
   View,
+  StyleSheet,
+  TextInput,
+  Button,
   StatusBar,
   ImageBackground,
   FlatList,
@@ -244,9 +247,6 @@ export default class Game extends React.Component {
     if (this.state.queueEntered) {
       return (
         <>
-          <Text style={{ marginBottom: 20, color: 'white' }}>
-            Waiting for opponent...
-          </Text>
           <TouchableOpacity
             style={{
               width: '80%',
@@ -263,6 +263,9 @@ export default class Game extends React.Component {
               Leave Queue
             </Text>
           </TouchableOpacity>
+          <Text style={{ marginBottom: 20, color: 'white' }}>
+            Waiting for opponent...
+          </Text>
         </>
       );
     } else {
@@ -276,7 +279,7 @@ export default class Game extends React.Component {
             alignItems: 'center',
             justifyContent: 'center',
             marginTop: 40,
-            marginBottom: 10,
+            marginBottom: 50,
           }}
           onPress={() => this.enterQueue()}>
           <Text style={{ color: 'white', fontWeight: 'bold' }}>
@@ -345,6 +348,10 @@ export default class Game extends React.Component {
               alignItems: 'center',
               justifyContent: 'space-between',
               backgroundColor: '#005780',
+              height: 55,
+              shadowOffset: { width: 10, height: 10 },
+              shadowColor: 'black',
+              shadowOpacity: 1.0,
             }}>
             <TouchableOpacity
               style={{
@@ -371,6 +378,134 @@ export default class Game extends React.Component {
               alignItems: 'center',
               backgroundColor: '#003f5c',
             }}>
+            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+              <View style={{ flexDirection: 'row', marginBottom: 10 }}>
+                <Image
+                  source={images.fire}
+                  resizeMode={'cover'}
+                  style={{
+                    width: 55,
+                    height: 55,
+                    borderRadius: 55,
+                    overflow: 'hidden',
+                  }}
+                />
+                <FontAwesome
+                  name="chevron-right"
+                  style={{
+                    color: '#fff',
+                    fontSize: 25,
+                    textAlignVertical: 'center',
+                    marginHorizontal: 7,
+                  }}
+                />
+                <Image
+                  source={images.earth}
+                  resizeMode={'cover'}
+                  style={{
+                    width: 55,
+                    height: 55,
+                    borderRadius: 55,
+                    overflow: 'hidden',
+                  }}
+                />
+                <FontAwesome
+                  name="chevron-right"
+                  style={{
+                    color: '#fff',
+                    fontSize: 25,
+                    textAlignVertical: 'center',
+                    marginHorizontal: 7,
+                  }}
+                />
+                <Image
+                  source={images.water}
+                  resizeMode={'cover'}
+                  style={{
+                    width: 55,
+                    height: 55,
+                    borderRadius: 55,
+                    overflow: 'hidden',
+                  }}
+                />
+                <FontAwesome
+                  name="chevron-right"
+                  style={{
+                    color: '#fff',
+                    fontSize: 25,
+                    textAlignVertical: 'center',
+                    marginHorizontal: 7,
+                  }}
+                />
+                <Image
+                  source={images.fire}
+                  resizeMode={'cover'}
+                  style={{
+                    width: 55,
+                    height: 55,
+                    borderRadius: 55,
+                    overflow: 'hidden',
+                  }}
+                />
+              </View>
+              <Text style={{ color: 'white' }}>Fire beats Earth</Text>
+              <Text style={{ color: 'white' }}>Earth beats Water</Text>
+              <Text style={{ color: 'white' }}>Water beats Fire</Text>
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginTop: 30,
+                }}>
+                <Text style={{ color: 'white', fontSize: 25, marginBottom: 7 }}>
+                  Winning Condition
+                </Text>
+                <Text
+                  style={{
+                    color: 'white',
+                    marginBottom: 10,
+                    textAlign: 'center',
+                  }}>
+                  Who makes the first triplet horizontal or vertical wins the
+                  match.
+                </Text>
+
+                <View
+                  style={{
+                    width: '100%',
+                    flexDirection: 'row',
+                    justifyContent: 'space-around',
+                  }}>
+                  <View />
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      backgroundColor: '#465881',
+                      padding: 7,
+                      borderRadius: 10,
+                    }}>
+                    <PointBall item={'orange'} />
+                    <PointBall item={'red'} />
+                    <PointBall item={'green'} />
+                  </View>
+                  <View
+                    style={{
+                      backgroundColor: '#465881',
+                      padding: 7,
+                      borderRadius: 10,
+                    }}>
+                    <PointBall item={'orange'} />
+                    <PointBall item={'red'} />
+                    <PointBall item={'green'} />
+                  </View>
+                  <View />
+                </View>
+                <Text
+                  style={{ color: 'white', marginTop: 7, textAlign: 'center' }}>
+                  *You can't win twice with cards of same type and color.{' '}
+                </Text>
+              </View>
+            </View>
             {this.renderQueue()}
           </View>
         </View>
@@ -623,7 +758,7 @@ export default class Game extends React.Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
-        <View style={{ height: StatusBar.currentHeight }} />
+        <View style={{ height: StatusBar.currentHeight || 18 }} />
         {this.renderScreen()}
         {this.state.title !== '' ? (
           <TouchableOpacity

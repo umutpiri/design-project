@@ -21,10 +21,10 @@ export default class MainMenu extends React.Component {
       headerRight: (
         <TouchableOpacity onPress={() => navigation.replace('Login')}>
           <FontAwesome
-            name="times"
+            name="sign-out"
             style={{
               color: '#fff',
-              fontSize: 40,
+              fontSize: 35,
               textAlignVertical: 'center',
               marginRight: 10,
             }}

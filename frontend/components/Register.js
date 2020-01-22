@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Alert,
   ActivityIndicator,
+  KeyboardAvoidingView
 } from 'react-native';
 
 const config = require('../config.json');
@@ -32,17 +33,21 @@ export default class Register extends React.Component {
   }
 
   register() {
-    if(this.state.isLoading == true)
-      return;
+    if (this.state.isLoading == true) return;
     if (this.state.password !== this.state.password2) {
-      Alert.alert('Password not match');
+      Alert.alert('Password not match!');
       return;
     }
     if (this.state.username.length < 3) {
-      Alert.alert('username too short');
+      Alert.alert('Username too short!');
       return;
     }
-    this.setState({isLoading: true});
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if(!reg.test(this.state.email)){
+      Alert.alert('Email address is not valid!');
+      return;
+    }
+    this.setState({ isLoading: true });
     axios
       .post(config.server + '/register', {
         username: this.state.username,
@@ -50,19 +55,19 @@ export default class Register extends React.Component {
         email: this.state.email,
       })
       .then(response => {
-        this.setState({isLoading: false});
+        this.setState({ isLoading: false });
         this.props.navigation.navigate('Login');
       })
       .catch(error => {
         console.log(error);
-        this.setState({isLoading: false});
+        this.setState({ isLoading: false });
         alert('Could not Register, an error occured!');
       });
   }
 
   render() {
     return (
-      <View style={styles.container}>
+      <KeyboardAvoidingView behavior="padding" style={styles.container}>
         <Text style={styles.logo}>H-Travel</Text>
         <Text style={styles.loginText}>Register</Text>
         <View style={styles.inputView}>
@@ -73,20 +78,36 @@ export default class Register extends React.Component {
             placeholderTextColor="#003f5c"
             value={this.state.email}
             onChangeText={text => this.setState({ email: text })}
+            returnKeyType={'next'}
+            onSubmitEditing={() => {
+              this.secondTextInput.focus();
+            }}
+            blurOnSubmit={false}
           />
         </View>
         <View style={styles.inputView}>
           <TextInput
+            ref={input => {
+              this.secondTextInput = input;
+            }}
             autoCapitalize={'none'}
             style={styles.inputText}
             placeholder="Username..."
             placeholderTextColor="#003f5c"
             value={this.state.username}
             onChangeText={text => this.setState({ username: text })}
+            returnKeyType={'next'}
+            onSubmitEditing={() => {
+              this.thirdTextInput.focus();
+            }}
+            blurOnSubmit={false}
           />
         </View>
         <View style={styles.inputView}>
           <TextInput
+            ref={input => {
+              this.thirdTextInput = input;
+            }}
             autoCapitalize={'none'}
             secureTextEntry
             style={styles.inputText}
@@ -94,10 +115,18 @@ export default class Register extends React.Component {
             placeholderTextColor="#003f5c"
             value={this.state.password}
             onChangeText={text => this.setState({ password: text })}
+            returnKeyType={'next'}
+            onSubmitEditing={() => {
+              this.fourthTextInput.focus();
+            }}
+            blurOnSubmit={false}
           />
         </View>
         <View style={styles.inputView}>
           <TextInput
+            ref={input => {
+              this.fourthTextInput = input;
+            }}
             autoCapitalize={'none'}
             secureTextEntry
             style={styles.inputText}
@@ -106,6 +135,7 @@ export default class Register extends React.Component {
             value={this.state.password2}
             onChangeText={text => this.setState({ password2: text })}
             onSubmitEditing={this.register}
+            blurOnSubmit={true}
           />
         </View>
         {this.state.isLoading ? (
@@ -115,7 +145,8 @@ export default class Register extends React.Component {
             <Text style={styles.registerText}>Register</Text>
           </TouchableOpacity>
         )}
-      </View>
+      </KeyboardAvoidingView>
+
     );
   }
 }
