@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Image,
   StyleSheet,
@@ -7,18 +7,18 @@ import {
   Text,
   ScrollView,
   FlatList,
-  ActivityIndicator,
-} from 'react-native';
-import axios from 'axios';
-import GameCard from './GameCard';
+  ActivityIndicator
+} from "react-native";
+import axios from "axios";
+import GameCard from "./GameCard";
 
-var config = require('../config.json');
+var config = require("../config.json");
 
 export default class Deck extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
-      title: 'Cards',
-      headerRight: <View />,
+      title: "Cards",
+      headerRight: <View />
     };
   };
   constructor(props) {
@@ -30,13 +30,13 @@ export default class Deck extends React.Component {
       card2: {},
       combinable: false,
       waiting: false,
-      combinedCard: {},
+      combinedCard: {}
     };
   }
 
   componentDidMount() {
     axios
-      .get(config.server + '/api/cards')
+      .get(config.server + "/api/cards")
       .then(res => {
         //console.log(res);
         this.setState({ cards: res.data, isLoading: false });
@@ -66,7 +66,7 @@ export default class Deck extends React.Component {
     ) {
       var newCards = [...this.state.cards];
       var selectedCard = this.state.cards[index];
-      newCards[index]['invisible'] = true;
+      newCards[index]["invisible"] = true;
       //console.log(selectedCard);
       this.state.cards.splice(index, 1);
       if (this.state.card1.color === undefined) {
@@ -90,9 +90,9 @@ export default class Deck extends React.Component {
       return;
     this.setState({ waiting: true });
     axios
-      .post(config.server + '/api/combineCards', {
+      .post(config.server + "/api/combineCards", {
         card1Id: this.state.card1.id,
-        card2Id: this.state.card2.id,
+        card2Id: this.state.card2.id
       })
       .then(res => {
         //console.log(res);
@@ -115,7 +115,7 @@ export default class Deck extends React.Component {
     if (this.state.isLoading) return;
     this.setState({ isLoading: true });
     axios
-      .get(config.server + '/api/cards')
+      .get(config.server + "/api/cards")
       .then(res => {
         //console.log(res);
         this.setState({
@@ -124,7 +124,7 @@ export default class Deck extends React.Component {
           card2: {},
           combinable: false,
           combinedCard: {},
-          isLoading: false,
+          isLoading: false
         });
       })
       .catch(err => console.log(err));
@@ -139,7 +139,7 @@ export default class Deck extends React.Component {
             type={this.state.combinedCard.type}
             power={this.state.combinedCard.power}
           />
-          <Text style={{ color: 'white' }}>Click to continue...</Text>
+          <Text style={{ color: "white" }}>Click to continue...</Text>
         </TouchableOpacity>
       );
     }
@@ -153,14 +153,15 @@ export default class Deck extends React.Component {
               var cardIndex = this.findCardById(cardId);
               if (cardIndex == -1) return;
               var newCards = [...this.state.cards];
-              newCards[cardIndex]['invisible'] = null;
+              newCards[cardIndex]["invisible"] = null;
               this.setState({
                 cards: newCards,
                 card1: {},
-                combinable: false,
+                combinable: false
               });
             }
-          }}>
+          }}
+        >
           <GameCard
             color={this.state.card1.color}
             type={this.state.card1.type}
@@ -174,15 +175,16 @@ export default class Deck extends React.Component {
             disabled={!this.state.combinable}
             onPress={() => this.combineCards()}
             style={{
-              backgroundColor: this.state.combinable ? '#fb5b5a' : '#ccc',
+              backgroundColor: this.state.combinable ? "#fb5b5a" : "#ccc",
               borderRadius: 50,
               height: 40,
               paddingHorizontal: 10,
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginBottom: 10,
-            }}>
-            <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 18 }}>
+              alignItems: "center",
+              justifyContent: "center",
+              marginBottom: 10
+            }}
+          >
+            <Text style={{ color: "white", fontWeight: "bold", fontSize: 18 }}>
               Combine
             </Text>
           </TouchableOpacity>
@@ -196,14 +198,15 @@ export default class Deck extends React.Component {
               var cardIndex = this.findCardById(cardId);
               if (cardIndex == -1) return;
               var newCards = [...this.state.cards];
-              newCards[cardIndex]['invisible'] = null;
+              newCards[cardIndex]["invisible"] = null;
               this.setState({
                 cards: newCards,
                 card2: {},
-                combinable: false,
+                combinable: false
               });
             }
-          }}>
+          }}
+        >
           <GameCard
             color={this.state.card2.color}
             type={this.state.card2.type}
@@ -219,44 +222,45 @@ export default class Deck extends React.Component {
       <View style={styles.container}>
         <View
           style={{
-            flexDirection: 'row',
+            flexDirection: "row",
             paddingBottom: 10,
             paddingTop: 20,
-            justifyContent: 'space-around',
-            alignItems: 'center',
-            backgroundColor: '#465881',
-          }}>
+            justifyContent: "space-around",
+            alignItems: "center",
+            backgroundColor: "#465881"
+          }}
+        >
           {this.renderCombine()}
         </View>
-        <ScrollView
-          contentComponentStyle={{ justifyContent: 'center', flex: 1 }}>
-          <View style={{ flex: 1, flexWrap: 'wrap', flexDirection: 'row' }}>
-            <FlatList
-              contentContainerStyle={styles.grid}
-              data={this.state.cards}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item, index }) => {
-                if (item.invisible) return <View style={{width: 110, height: 150}}></View>;
-                return (
-                  <TouchableOpacity
-                    activeOpacity={1}
-                    style={{ paddingTop: 15, marginHorizontal: 5 }}
-                    onPress={() => this.cardPressed(index)}>
-                    <GameCard
-                      color={item.color}
-                      type={item.type}
-                      power={item.power}
-                    />
-                  </TouchableOpacity>
-                );
-              }}
-            />
-          </View>
-        </ScrollView>
+        <FlatList
+          style={{ flex: 1 }}
+          contentContainerStyle={styles.grid}
+          horizontal={false}
+          data={this.state.cards}
+          numColumns={3}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item, index }) => {
+            if (item.invisible)
+              return <View style={{ width: 110, height: 150 }}></View>;
+            return (
+              <TouchableOpacity
+                activeOpacity={1}
+                style={{ paddingTop: 15, marginHorizontal: 5 }}
+                onPress={() => this.cardPressed(index)}
+              >
+                <GameCard
+                  color={item.color}
+                  type={item.type}
+                  power={item.power}
+                />
+              </TouchableOpacity>
+            );
+          }}
+        />
         {this.state.isLoading ? (
           <ActivityIndicator
             style={{
-              position: 'absolute',
+              position: "absolute",
               bottom: 0,
               top: 0,
               left: 0,
@@ -274,7 +278,7 @@ export default class Deck extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#003f5c',
+    backgroundColor: "#003f5c"
   },
-  grid: { justifyContent: 'center', flexDirection: 'row', flexWrap: 'wrap' },
+  grid: { alignItems: "center", paddingVertical: 10 }
 });

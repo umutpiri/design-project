@@ -6,6 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   ActivityIndicator,
+  KeyboardAvoidingView,
 } from 'react-native';
 
 const config = require('../config.json');
@@ -28,9 +29,16 @@ export default class Login extends React.Component {
   }
 
   login() {
-    if(this.state.isLoading == true)
+    if (this.state.isLoading == true) return;
+    if(this.state.username == ""){
+      alert("Username can't be empty!");
       return;
-    this.setState({isLoading: true});
+    }
+    if(this.state.password == ""){
+      alert("Password can't be empty!");
+      return;
+    }
+    this.setState({ isLoading: true });
     axios
       .post(config.server + '/login', {
         username: this.state.username,
@@ -38,19 +46,19 @@ export default class Login extends React.Component {
       })
       .then(response => {
         this.setState({ isLoading: false });
-        this.props.navigation.replace('MainMenu', {user: response.data});
+        this.props.navigation.replace('MainMenu', { user: response.data });
       })
       .catch(error => {
         this.setState({ isLoading: false });
         console.log(error);
-        alert('Could not login, check your credintials');
+        alert('Could not login, check your credintials!');
       });
   }
 
   render() {
     const { navigate } = this.props.navigation;
     return (
-      <View style={styles.container}>
+      <KeyboardAvoidingView behavior="padding" style={styles.container}>
         <Text style={styles.logo}>H-Travel</Text>
         <View style={styles.inputView}>
           <TextInput
@@ -60,10 +68,18 @@ export default class Login extends React.Component {
             placeholderTextColor="#003f5c"
             value={this.state.username}
             onChangeText={text => this.setState({ username: text })}
+            returnKeyType={'next'}
+            onSubmitEditing={() => {
+              this.secondTextInput.focus();
+            }}
+            blurOnSubmit={false}
           />
         </View>
         <View style={styles.inputView}>
           <TextInput
+            ref={input => {
+              this.secondTextInput = input;
+            }}
             autoCapitalize={'none'}
             secureTextEntry
             style={styles.inputText}
@@ -72,12 +88,19 @@ export default class Login extends React.Component {
             value={this.state.password}
             onChangeText={text => this.setState({ password: text })}
             onSubmitEditing={this.login}
+            returnKeyType={'done'}
+            blurOnSubmit={true}
           />
         </View>
         {this.state.isLoading ? (
-          <ActivityIndicator size='large' color='#fb5b5a'/>
+          <ActivityIndicator size="large" color="#fb5b5a" />
         ) : (
-          <View style={{width: '100%', justifyContent: 'center', alignItems: 'center'}}>
+          <View
+            style={{
+              width: '100%',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
             <TouchableOpacity style={styles.loginBtn} onPress={this.login}>
               <Text style={styles.loginText}>LOGIN</Text>
             </TouchableOpacity>
@@ -88,7 +111,7 @@ export default class Login extends React.Component {
             </TouchableOpacity>
           </View>
         )}
-      </View>
+      </KeyboardAvoidingView>
     );
   }
 }
