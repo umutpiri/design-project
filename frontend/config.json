@@ -1,5 +1,3 @@
 {
-  "server3" : "https://hucard-backend.herokuapp.com",
-  "server2" : "http://192.168.1.31:8383",
   "server": "https://h-travel.herokuapp.com"
 }
